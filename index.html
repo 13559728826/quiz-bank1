@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#3b6ef5">
+  <meta name="description" content="业务知识题库离线自测：1132 题，单选/多选/判断/填空/简答，错题本、收藏、答题卡。">
+  <title>业务知识题库 · 离线自测</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ========== 首页 ========== -->
+<div class="view" id="view-home">
+  <header class="hero">
+    <h1 class="hero-title">业务知识题库</h1>
+    <p class="hero-sub">共 <span id="home-total">1132</span> 题 · 离线自测 · 无需联网</p>
+    <div class="hero-stats" id="home-counts"></div>
+  </header>
+
+  <main class="container">
+    <section class="card stat-card">
+      <div class="stat-item"><span class="stat-num" id="stat-total">0</span><span class="stat-lbl">累计已答</span></div>
+      <div class="stat-item"><span class="stat-num" id="stat-correct">0</span><span class="stat-lbl">累计答对</span></div>
+      <div class="stat-item"><span class="stat-num" id="stat-rate">0%</span><span class="stat-lbl">正确率</span></div>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">随机练习</h2>
+      <div class="btn-row" id="btn-random">
+        <button type="button" class="btn" data-count="10">10 题</button>
+        <button type="button" class="btn" data-count="20">20 题</button>
+        <button type="button" class="btn" data-count="50">50 题</button>
+        <button type="button" class="btn" data-count="100">100 题</button>
+      </div>
+      <button type="button" class="btn-main" id="btn-all">全部 <span id="all-total">1132</span> 题 · 顺序刷一遍</button>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">按题型练习</h2>
+      <div class="type-grid" id="type-grid"></div>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">我的</h2>
+      <button type="button" class="mine-row" id="btn-wrong">
+        <span class="mine-left"><span class="mine-name">错题本</span><span class="mine-sub">答错的题自动收进来，答对即移出</span></span>
+        <span class="mine-right"><span class="mine-count" id="wrong-count">0</span><span class="mine-arrow">›</span></span>
+      </button>
+      <button type="button" class="mine-row" id="btn-fav">
+        <span class="mine-left"><span class="mine-name">我的收藏</span><span class="mine-sub">答题时点右上角星标收藏</span></span>
+        <span class="mine-right"><span class="mine-count" id="fav-count">0</span><span class="mine-arrow">›</span></span>
+      </button>
+      <button type="button" class="mine-row" id="btn-clear">
+        <span class="mine-left"><span class="mine-name">清空错题本</span><span class="mine-sub">清掉所有错题记录</span></span>
+        <span class="mine-right"><span class="mine-arrow">›</span></span>
+      </button>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">最近练习</h2>
+      <div id="history-list"></div>
+    </section>
+  </main>
+</div>
+
+<!-- ========== 答题页 ========== -->
+<div class="view quiz-view" id="view-quiz" hidden>
+  <header class="topbar">
+    <div class="progress-track"><div class="progress-fill" id="q-progress"></div></div>
+    <div class="bar-row">
+      <span class="counter" id="q-counter">0 / 0</span>
+      <span class="type-tag" id="q-type">单选</span>
+      <span class="timer" id="q-timer">00:00</span>
+      <button type="button" class="fav-btn" id="q-fav" aria-label="收藏">☆</button>
+    </div>
+  </header>
+
+  <main class="qbody" id="q-body"></main>
+
+  <footer class="footer">
+    <button type="button" class="ft-btn" id="q-prev">上一题</button>
+    <button type="button" class="ft-btn" id="q-card">答题卡</button>
+    <button type="button" class="ft-btn primary" id="q-next">下一题</button>
+  </footer>
+
+  <div class="mask" id="card-mask" hidden>
+    <div class="sheet">
+      <h3 class="panel-title">答题卡</h3>
+      <div class="legend">
+        <span class="lg lg-right">已答对</span>
+        <span class="lg lg-wrong">已答错</span>
+        <span class="lg lg-none">未作答</span>
+      </div>
+      <div class="card-grid" id="card-grid"></div>
+      <button type="button" class="panel-close" id="card-close">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 结果页 ========== -->
+<div class="view" id="view-result" hidden>
+  <main class="container">
+    <div class="score-card level-low" id="score-card">
+      <div class="score-num"><span id="score-correct">0</span><span class="score-total">/<span id="score-total">0</span></span></div>
+      <div class="score-label">答对题数</div>
+      <div class="score-meta" id="score-meta"></div>
+    </div>
+
+    <section class="card">
+      <h2 class="card-title">题型表现</h2>
+      <div id="type-stats"></div>
+    </section>
+
+    <section class="card" id="wrong-card">
+      <h2 class="card-title">错题回顾（<span id="result-wrong-count">0</span>）</h2>
+      <div id="wrong-list"></div>
+    </section>
+
+    <section class="card" id="all-right-card" hidden>
+      <div class="all-right">🎉 全部答对，这组题你掌握了！</div>
+    </section>
+
+    <div class="actions">
+      <button type="button" class="btn-main" id="btn-retry">重做错题</button>
+      <button type="button" class="btn-ghost" id="btn-again">再来一组</button>
+      <button type="button" class="btn-ghost" id="btn-home">返回首页</button>
+    </div>
+  </main>
+</div>
+
+<script src="data.js"></script>
+<script src="logic.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
